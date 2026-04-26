@@ -498,43 +498,28 @@ function Library:NewWindow(ConfigWindow)
 	LBStroke.Thickness = 2
 	LBStroke.Color     = Color3.fromRGB(200, 200, 200)
 
-	-- ── Drag-vs-tap: drag moves button, short tap toggles UI ──────────────
-	local logoDragMoved = false
-	local logoDragStart = nil
+	-- ── Draggable (reuse safe library method) ────────────────────────────
+	self:MakeDraggable(LogoBtn, LogoBtn)
+
+	-- ── Tap detection: compare start vs end position ──────────────────────
+	-- Mobile touch naturally drifts a few pixels, so use a 25px threshold.
+	local tapStartPos = nil
 
 	LogoBtn.InputBegan:Connect(function(inp)
 		if inp.UserInputType == Enum.UserInputType.MouseButton1
 			or inp.UserInputType == Enum.UserInputType.Touch then
-			logoDragMoved = false
-			logoDragStart = inp.Position
-			local startPos = LogoBtn.Position
-			local conn
-			conn = UIS.InputChanged:Connect(function(mi)
-				if mi.UserInputType == Enum.UserInputType.MouseMovement
-					or mi.UserInputType == Enum.UserInputType.Touch then
-					local delta = mi.Position - logoDragStart
-					if math.abs(delta.X) > 6 or math.abs(delta.Y) > 6 then
-						logoDragMoved = true
-					end
-					LogoBtn.Position = UDim2.new(
-						startPos.X.Scale, startPos.X.Offset + delta.X,
-						startPos.Y.Scale, startPos.Y.Offset + delta.Y
-					)
-				end
-			end)
-			inp.Changed:Connect(function()
-				if inp.UserInputState == Enum.UserInputState.End then
-					conn:Disconnect()
-				end
-			end)
+			tapStartPos = Vector2.new(inp.Position.X, inp.Position.Y)
 		end
 	end)
 
 	LogoBtn.InputEnded:Connect(function(inp)
-		if inp.UserInputType == Enum.UserInputType.MouseButton1
-			or inp.UserInputType == Enum.UserInputType.Touch then
-			if not logoDragMoved then
-				-- Real tap — toggle UI visibility
+		if (inp.UserInputType == Enum.UserInputType.MouseButton1
+			or inp.UserInputType == Enum.UserInputType.Touch) and tapStartPos then
+			local endPos = Vector2.new(inp.Position.X, inp.Position.Y)
+			local moved  = (endPos - tapStartPos).Magnitude
+			tapStartPos  = nil
+			if moved < 25 then
+				-- Short tap → toggle UI on / off
 				KingRuaUI.Enabled = not KingRuaUI.Enabled
 				Library:TweenInstance(LBStroke, 0.15, "Thickness", 3)
 				task.delay(0.15, function()
