@@ -2,7 +2,7 @@
 	WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
 ]]
 -- Example usage of King Rua UI Library
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/biarzxc1/library/refs/heads/main/library.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/biarzxc1/library/refs/heads/main/libs.lua"))()
 
 -- Create a new window with custom configuration
 local Window = Library:NewWindow({
