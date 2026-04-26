@@ -308,7 +308,7 @@ function Speed_Library:SetNotification(Config)
 
   local Close = Custom:Create("TextButton", {
     Font = Enum.Font.SourceSans,
-    Text = "X",
+    Text = "",
     TextColor3 = Color3.fromRGB(255, 255, 255),
     TextSize = 18,
     AnchorPoint = Vector2.new(1, 0.5),
@@ -320,6 +320,16 @@ function Speed_Library:SetNotification(Config)
     Size = UDim2.new(0, 25, 0, 25),
     Name = "Close",
     Parent = Top
+  })
+  Custom:Create("ImageLabel", {
+    Image = "rbxassetid://10747384394",
+    ImageColor3 = Color3.fromRGB(220, 220, 220),
+    AnchorPoint = Vector2.new(0.5, 0.5),
+    BackgroundTransparency = 1,
+    BorderSizePixel = 0,
+    Position = UDim2.new(0.5, 0, 0.5, 0),
+    Size = UDim2.new(0, 15, 0, 15),
+    Parent = Close
   })
 
   local TextLabel2 = Custom:Create("TextLabel", {
@@ -454,6 +464,19 @@ function Speed_Library:CreateWindow(Config)
 
   Custom:Create("UICorner", {}, Top)
 
+  -- Blue gradient on title bar
+  Custom:Create("UIGradient", {
+    Color = ColorSequence.new{
+      ColorSequenceKeypoint.new(0, Color3.fromRGB(10, 60, 180)),
+      ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 20, 80))
+    },
+    Rotation = 90,
+    Transparency = NumberSequence.new{
+      NumberSequenceKeypoint.new(0, 0.55),
+      NumberSequenceKeypoint.new(1, 0.75)
+    }
+  }, Top)
+
   local TextLabel1 = Custom:Create("TextLabel", {
     Font = Enum.Font.GothamBold,
     Text = Description,
@@ -475,7 +498,7 @@ function Speed_Library:CreateWindow(Config)
 
   local Close = Custom:Create("TextButton", {
     Font = Enum.Font.SourceSans,
-    Text = "X",
+    Text = "",
     TextColor3 = Color3.fromRGB(255, 255, 255),
     TextSize = 18,
     AnchorPoint = Vector2.new(1, 0.5),
@@ -487,10 +510,20 @@ function Speed_Library:CreateWindow(Config)
     Size = UDim2.new(0, 25, 0, 25),
     Name = "Close"
   }, Top)
+  Custom:Create("ImageLabel", {
+    Image = "rbxassetid://10747384394",
+    ImageColor3 = Color3.fromRGB(220, 220, 220),
+    AnchorPoint = Vector2.new(0.5, 0.5),
+    BackgroundTransparency = 1,
+    BorderSizePixel = 0,
+    Position = UDim2.new(0.5, 0, 0.5, 0),
+    Size = UDim2.new(0, 15, 0, 15),
+    Name = "CloseIcon"
+  }, Close)
 
   local Min = Custom:Create("TextButton", {
     Font = Enum.Font.SourceSans,
-    Text = "-", 
+    Text = "",
     TextColor3 = Color3.fromRGB(255, 255, 255),
     TextSize = 18,
     AnchorPoint = Vector2.new(1, 0.5),
@@ -501,7 +534,17 @@ function Speed_Library:CreateWindow(Config)
     Position = UDim2.new(1, -42, 0.5, 0),
     Size = UDim2.new(0, 25, 0, 25),
     Name = "Min"
-}, Top)
+  }, Top)
+  Custom:Create("ImageLabel", {
+    Image = "rbxassetid://10734896206",
+    ImageColor3 = Color3.fromRGB(220, 220, 220),
+    AnchorPoint = Vector2.new(0.5, 0.5),
+    BackgroundTransparency = 1,
+    BorderSizePixel = 0,
+    Position = UDim2.new(0.5, 0, 0.5, 0),
+    Size = UDim2.new(0, 15, 0, 15),
+    Name = "MinIcon"
+  }, Min)
 
   local LayersTab = Custom:Create("Frame", {
     BackgroundColor3 = Color3.fromRGB(255, 255, 255),
@@ -849,10 +892,11 @@ function Speed_Library:CreateWindow(Config)
         BackgroundColor3 = Custom.ColorRGB,
         BorderColor3 = Color3.fromRGB(0, 0, 0),
         BorderSizePixel = 0,
-        Position = UDim2.new(0, 2, 0, 9),
-        Size = UDim2.new(0, 1, 0, 12),
+        Position = UDim2.new(0, 0, 0, 5),
+        Size = UDim2.new(0, 3, 0, 20),
         Name = "ChooseFrame",
-      }, Tab)
+        ZIndex = 5,
+      }, ScrollTab)
   
       Custom:Create("UIStroke", {
         Color = Custom.ColorRGB,
@@ -885,7 +929,7 @@ function Speed_Library:CreateWindow(Config)
         end
   
         local _TabT = TweenService:Create(Tab, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.92})
-        local _FTween = TweenService:Create(FrameChoose, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), { Position = UDim2.new(0, 2, 0, 9 + (33 * Tab.LayoutOrder)) })
+        local _FTween = TweenService:Create(FrameChoose, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), { Position = UDim2.new(0, 0, 0, 5 + (30 * Tab.LayoutOrder)) })
 
         _TabT:Play()
         _FTween:Play()
@@ -962,7 +1006,7 @@ function Speed_Library:CreateWindow(Config)
       }, SectionReal)
   
       local FeatureImg = Custom:Create("ImageLabel", {
-        Image = "rbxassetid://125609963478878",
+        Image = "rbxassetid://10709791437",
         AnchorPoint = Vector2.new(0.5, 0.5),
         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
         BackgroundTransparency = 0.9990000128746033,
@@ -1974,7 +2018,7 @@ function Speed_Library:CreateWindow(Config)
         }, SelectOptionsFrame)
 
         local OptionImg = Custom:Create("ImageLabel", {
-          Image = "rbxassetid://90200523188815",
+          Image = "rbxassetid://10709790948",
           ImageColor3 = Color3.fromRGB(231, 231, 231),
           AnchorPoint = Vector2.new(1, 0.5),
           BackgroundColor3 = Color3.fromRGB(255, 255, 255),
