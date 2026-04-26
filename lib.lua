@@ -486,7 +486,7 @@ function Library:NewWindow(ConfigWindow)
 	LogoBtn.BackgroundColor3      = Color3.fromRGB(20, 20, 20)  -- dark bg for logo
 	LogoBtn.Image                 = "rbxassetid://124762714875426"
 	LogoBtn.Size                  = UDim2.new(0, 50, 0, 50)
-	LogoBtn.Position              = UDim2.new(0.5, -25, 0.85, 0)
+	LogoBtn.Position              = UDim2.new(1, -65, 0.45, 0)  -- right side, vertically centered
 	LogoBtn.Active                = true
 	LogoBtn.Selectable            = true
 	LogoBtn.ZIndex                = 10
