@@ -1,124 +1,229 @@
 --[[
-	WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
+    SpeedHub X | Blue Library — Full Component Example
+    Every component is visible and working.
+    Replace the URL below with wherever you host libs_blue.lua
 ]]
--- Example usage of King Rua UI Library
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/biarzxc1/library/refs/heads/main/libs.lua"))()
 
--- Create a new window with custom configuration
-local Window = Library:NewWindow({
-    Title = "KingRua Library",
-    Description = "Welcome"
+local Library = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/libs_blue.lua"
+))()
+
+-- ══════════════════════════════════════════
+--  WINDOW
+-- ══════════════════════════════════════════
+local Window = Library:CreateWindow({
+    ["Title"]       = "Speed Hub X",
+    ["Description"] = "Blue Edition",
+    ["Tab Width"]   = 160,
 })
 
--- Create tabs
-local MainTab = Window:T("Main")
-local SettingsTab = Window:T("Settings")
-local CreditsTab = Window:T("Credits")
+-- ══════════════════════════════════════════
+--  TAB 1 — Main
+-- ══════════════════════════════════════════
+local MainTab = Window:CreateTab({
+    ["Name"] = "Main",
+    ["Icon"] = "rbxassetid://10723407389",
+})
 
--- Main Tab Sections
-local PlayerSection = MainTab:AddSection("Player Settings")
-local WorldSection = MainTab:AddSection("World Settings")
+local MainSection = MainTab:AddSection("Main Controls", true)
 
--- Settings Tab Sections
-local VisualSection = SettingsTab:AddSection("Visuals")
-local MiscSection = SettingsTab:AddSection("Miscellaneous")
+-- Paragraph
+MainSection:AddParagraph({
+    ["Title"]   = "Welcome",
+    ["Content"] = "This is a paragraph component. Use it to show info to the user.",
+})
 
--- Credits Tab
-local InfoSection = CreditsTab:AddSection("Information")
+-- Separator
+MainSection:AddSeperator({
+    ["Title"] = "Movement",
+})
 
--- Add Toggles
-PlayerSection:AddToggle({
-    Title = "Auto Farm",
-    Description = "Automatically farms resources",
-    Default = false,
-    Callback = function(value)
-        if value then
-            print("Auto Farm Enabled")
-            -- Add your auto farm code here
-        else
-            print("Auto Farm Disabled")
+-- Toggle
+local SpeedToggle = MainSection:AddToggle({
+    ["Title"]    = "Speed Boost",
+    ["Content"]  = "Enables fast walk speed",
+    ["Default"]  = false,
+    ["Callback"] = function(value)
+        local char = game.Players.LocalPlayer.Character
+        if char then
+            char.Humanoid.WalkSpeed = value and 80 or 16
         end
-    end
+    end,
 })
 
--- Add Buttons
-PlayerSection:AddButton({
-    Title = "Teleport to Spawn",
-    Description = "Teleports you back to spawn point",
-    Callback = function()
-        print("Teleporting to spawn...")
-        -- Add teleport code
-        -- game.Players.LocalPlayer.Character.HumanoidRootPart.Position = Vector3.new(0, 50, 0)
-    end
+-- Slider
+local SpeedSlider = MainSection:AddSlider({
+    ["Title"]     = "Walk Speed",
+    ["Content"]   = "Drag or type a value",
+    ["Increment"] = 1,
+    ["Min"]       = 16,
+    ["Max"]       = 250,
+    ["Default"]   = 50,
+    ["Callback"]  = function(value)
+        local char = game.Players.LocalPlayer.Character
+        if char then
+            char.Humanoid.WalkSpeed = value
+        end
+    end,
 })
 
--- Add Slider
-PlayerSection:AddSlider({
-    Title = "Walk Speed",
-    Description = "Adjust your movement speed",
-    Min = 16,
-    Max = 100,
-    Increment = 1,
-    Default = 16,
-    Callback = function(value)
-        print("Walk Speed set to:", value)
-        -- game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value
-    end
+-- Line divider
+MainSection:AddLine()
+
+-- Slider
+local JumpSlider = MainSection:AddSlider({
+    ["Title"]     = "Jump Power",
+    ["Content"]   = "How high you jump",
+    ["Increment"] = 5,
+    ["Min"]       = 50,
+    ["Max"]       = 500,
+    ["Default"]   = 50,
+    ["Callback"]  = function(value)
+        local char = game.Players.LocalPlayer.Character
+        if char then
+            char.Humanoid.JumpPower = value
+        end
+    end,
 })
 
--- Add Dropdown
-WorldSection:AddDropdown({
-    Title = "Teleport Locations",
-    Description = "Choose where to teleport",
-    Values = {"Spawn", "Shop", "Arena", "Secret Area"},
-    Default = "Spawn",
-    Callback = function(value)
-        print("Teleporting to:", value)
-        -- Add teleport logic based on selection
-    end
+-- Button
+MainSection:AddButton({
+    ["Title"]    = "Reset Character",
+    ["Content"]  = "Respawns your character",
+    ["Icon"]     = "rbxassetid://7734010488",
+    ["Callback"] = function()
+        game.Players.LocalPlayer:LoadCharacter()
+    end,
 })
 
--- Add Input/Textbox
-VisualSection:AddInput({
-    Title = "Custom Message",
-    Description = "Enter your custom message",
-    PlaceHolder = "Type here...",
-    Default = "Hello World",
-    Callback = function(value)
-        print("Message changed to:", value)
-    end
+-- ══════════════════════════════════════════
+--  TAB 2 — Settings
+-- ══════════════════════════════════════════
+local SettingsTab = Window:CreateTab({
+    ["Name"] = "Settings",
+    ["Icon"] = "rbxassetid://10723407389",
 })
 
--- Multi-select Dropdown example
-MiscSection:AddDropdown({
-    Title = "ESP Options",
-    Description = "Select which ESP to enable",
-    Values = {"Players", "Chests", "NPCs", "Items"},
-    Default = {"Players", "Chests"},
-    Multi = true,
-    Callback = function(values)
-        print("Selected ESP options:", table.concat(values, ", "))
-        -- Enable/disable ESP based on selection
-    end
+local SettingsSection = SettingsTab:AddSection("Player Settings", true)
+
+-- Input
+local NameInput = SettingsSection:AddInput({
+    ["Title"]    = "Display Name",
+    ["Content"]  = "Shown above your head",
+    ["Default"]  = "Player",
+    ["Callback"] = function(value)
+        -- apply name logic here
+    end,
 })
 
--- Add Paragraphs for information
-local CreditsPara = InfoSection:AddParagraph({
-    Title = "Script Information",
-    Content = "Version: 1.0.0\nCreated by: YourName\nLast Updated: 2024"
+-- Separator
+SettingsSection:AddSeperator({
+    ["Title"] = "Toggles",
 })
 
-local FeaturesPara = InfoSection:AddParagraph({
-    Title = "Features",
-    Content = "• Auto Farm\n• ESP System\n• Speed Control\n• Teleport System\n• Customizable UI"
+-- Toggle (default ON)
+local AntiAFKToggle = SettingsSection:AddToggle({
+    ["Title"]    = "Anti-AFK",
+    ["Content"]  = "Prevents being kicked for idling",
+    ["Default"]  = true,
+    ["Callback"] = function(value)
+        -- handle anti-afk logic here
+    end,
 })
 
-local NotesPara = InfoSection:AddParagraph({
-    Title = "Notes",
-    Content = "This is an example script showing how to use the King Rua UI Library. Replace the placeholder code with your actual functionality."
+-- Toggle
+local NoclipToggle = SettingsSection:AddToggle({
+    ["Title"]    = "No Clip",
+    ["Content"]  = "Walk through walls",
+    ["Default"]  = false,
+    ["Callback"] = function(value)
+        -- noclip logic here
+    end,
 })
 
--- You can update paragraph content dynamically if needed
-task.wait(3)
-CreditsPara:SetTitle("Updated Information")
-CreditsPara:SetDesc("This shows how you can update paragraph content!")
+-- Line
+SettingsSection:AddLine()
+
+-- Dropdown — single select
+local GamemodeDropdown = SettingsSection:AddDropdown({
+    ["Title"]    = "Game Mode",
+    ["Content"]  = "Select one mode",
+    ["Multi"]    = false,
+    ["Options"]  = { "Normal", "Spectator", "God Mode", "Creative" },
+    ["Default"]  = { "Normal" },
+    ["Callback"] = function(selected)
+        local mode = selected[1]
+        -- apply mode logic here
+    end,
+})
+
+-- Dropdown — multi select
+local FeatureDropdown = SettingsSection:AddDropdown({
+    ["Title"]    = "Active Features",
+    ["Content"]  = "Pick multiple to enable",
+    ["Multi"]    = true,
+    ["Options"]  = { "ESP", "Auto Farm", "Aimbot", "Fly", "Inf Jump" },
+    ["Default"]  = {},
+    ["Callback"] = function(selected)
+        for _, feature in ipairs(selected) do
+            -- enable each feature
+        end
+    end,
+})
+
+-- ══════════════════════════════════════════
+--  TAB 3 — Utilities
+-- ══════════════════════════════════════════
+local UtilTab = Window:CreateTab({
+    ["Name"] = "Utilities",
+    ["Icon"] = "rbxassetid://10723407389",
+})
+
+local UtilSection = UtilTab:AddSection("Utility Tools", true)
+
+-- Notification demo
+UtilSection:AddSeperator({ ["Title"] = "Notifications" })
+
+UtilSection:AddButton({
+    ["Title"]    = "Show Notification",
+    ["Content"]  = "Fires a test notification",
+    ["Icon"]     = "rbxassetid://7734010488",
+    ["Callback"] = function()
+        Library:SetNotification({
+            [1] = "Speed Hub X",
+            [2] = "Blue",
+            [3] = "Notification is working correctly!",
+            [5] = 0.4,
+            [6] = 4,
+        })
+    end,
+})
+
+UtilSection:AddLine()
+
+-- Reset all values using :Set()
+UtilSection:AddSeperator({ ["Title"] = "Reset" })
+
+UtilSection:AddButton({
+    ["Title"]    = "Reset All Defaults",
+    ["Content"]  = "Resets every component to its default value",
+    ["Icon"]     = "rbxassetid://7734010488",
+    ["Callback"] = function()
+        SpeedToggle:Set(false)
+        SpeedSlider:Set(50)
+        JumpSlider:Set(50)
+        AntiAFKToggle:Set(true)
+        NoclipToggle:Set(false)
+        NameInput:Set("Player")
+        GamemodeDropdown:Set({ "Normal" })
+        FeatureDropdown:Set({})
+
+        Library:SetNotification({
+            [1] = "Reset",
+            [2] = "Blue",
+            [3] = "All values have been reset to defaults.",
+            [5] = 0.4,
+            [6] = 3,
+        })
+    end,
+})
