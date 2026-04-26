@@ -12,8 +12,8 @@ local Library = loadstring(game:HttpGet(
 --  WINDOW
 -- ══════════════════════════════════════════
 local Window = Library:CreateWindow({
-    ["Title"]       = "Speed Hub X",
-    ["Description"] = "Blue Edition",
+    ["Title"]       = "Kaizen Hub",
+    ["Description"] = "",
     ["Tab Width"]   = 160,
 })
 
@@ -90,7 +90,7 @@ local JumpSlider = MainSection:AddSlider({
 MainSection:AddButton({
     ["Title"]    = "Reset Character",
     ["Content"]  = "Respawns your character",
-    ["Icon"]     = "rbxassetid://7734010488",
+    ["Icon"]     = "rbxassetid://10734933222",
     ["Callback"] = function()
         game.Players.LocalPlayer:LoadCharacter()
     end,
@@ -101,7 +101,7 @@ MainSection:AddButton({
 -- ══════════════════════════════════════════
 local SettingsTab = Window:CreateTab({
     ["Name"] = "Settings",
-    ["Icon"] = "rbxassetid://10723407389",
+    ["Icon"] = "rbxassetid://10734950309",
 })
 
 local SettingsSection = SettingsTab:AddSection("Player Settings", true)
@@ -176,7 +176,7 @@ local FeatureDropdown = SettingsSection:AddDropdown({
 -- ══════════════════════════════════════════
 local UtilTab = Window:CreateTab({
     ["Name"] = "Utilities",
-    ["Icon"] = "rbxassetid://10723407389",
+    ["Icon"] = "rbxassetid://10747383470",
 })
 
 local UtilSection = UtilTab:AddSection("Utility Tools", true)
@@ -187,10 +187,10 @@ UtilSection:AddSeperator({ ["Title"] = "Notifications" })
 UtilSection:AddButton({
     ["Title"]    = "Show Notification",
     ["Content"]  = "Fires a test notification",
-    ["Icon"]     = "rbxassetid://7734010488",
+    ["Icon"]     = "rbxassetid://10709775704",
     ["Callback"] = function()
         Library:SetNotification({
-            [1] = "Speed Hub X",
+            [1] = "Kaizen Hub",
             [2] = "Blue",
             [3] = "Notification is working correctly!",
             [5] = 0.4,
@@ -207,7 +207,7 @@ UtilSection:AddSeperator({ ["Title"] = "Reset" })
 UtilSection:AddButton({
     ["Title"]    = "Reset All Defaults",
     ["Content"]  = "Resets every component to its default value",
-    ["Icon"]     = "rbxassetid://7734010488",
+    ["Icon"]     = "rbxassetid://10734940376",
     ["Callback"] = function()
         SpeedToggle:Set(false)
         SpeedSlider:Set(50)
