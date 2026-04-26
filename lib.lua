@@ -483,10 +483,10 @@ function Library:NewWindow(ConfigWindow)
 	LogoBtn.Name                  = "LogoButton"
 	LogoBtn.Parent                = LogoGui
 	LogoBtn.BorderSizePixel       = 0
-	LogoBtn.BackgroundColor3      = Color3.fromRGB(20, 20, 20)  -- dark bg for logo
+	LogoBtn.BackgroundColor3      = Color3.fromRGB(20, 20, 20)
 	LogoBtn.Image                 = "rbxassetid://124762714875426"
 	LogoBtn.Size                  = UDim2.new(0, 50, 0, 50)
-	LogoBtn.Position              = UDim2.new(1, -65, 0.45, 0)  -- right side, vertically centered
+	LogoBtn.Position              = UDim2.new(0, 15, 0.45, 0)  -- LEFT side
 	LogoBtn.Active                = true
 	LogoBtn.Selectable            = true
 	LogoBtn.ZIndex                = 10
@@ -494,21 +494,54 @@ function Library:NewWindow(ConfigWindow)
 	local LBCorner = Instance.new("UICorner", LogoBtn)
 	LBCorner.CornerRadius = UDim.new(1, 0)
 
-	-- White/light stroke on logo button (replaces green)
 	local LBStroke = Instance.new("UIStroke", LogoBtn)
 	LBStroke.Thickness = 2
-	LBStroke.Color     = Color3.fromRGB(200, 200, 200)   -- light white/gray
+	LBStroke.Color     = Color3.fromRGB(200, 200, 200)
 
-	self:MakeDraggable(LogoBtn, LogoBtn)
+	-- ── Drag-vs-tap: drag moves button, short tap toggles UI ──────────────
+	local logoDragMoved = false
+	local logoDragStart = nil
 
-	-- ── Toggle UI on/off by clicking the logo ─────────────────────────────
-	LogoBtn.Activated:Connect(function()
-		KingRuaUI.Enabled = not KingRuaUI.Enabled
-		-- Subtle feedback: pulse stroke color
-		Library:TweenInstance(LBStroke, 0.15, "Thickness", 3)
-		task.delay(0.15, function()
-			Library:TweenInstance(LBStroke, 0.15, "Thickness", 2)
-		end)
+	LogoBtn.InputBegan:Connect(function(inp)
+		if inp.UserInputType == Enum.UserInputType.MouseButton1
+			or inp.UserInputType == Enum.UserInputType.Touch then
+			logoDragMoved = false
+			logoDragStart = inp.Position
+			local startPos = LogoBtn.Position
+			local conn
+			conn = UIS.InputChanged:Connect(function(mi)
+				if mi.UserInputType == Enum.UserInputType.MouseMovement
+					or mi.UserInputType == Enum.UserInputType.Touch then
+					local delta = mi.Position - logoDragStart
+					if math.abs(delta.X) > 6 or math.abs(delta.Y) > 6 then
+						logoDragMoved = true
+					end
+					LogoBtn.Position = UDim2.new(
+						startPos.X.Scale, startPos.X.Offset + delta.X,
+						startPos.Y.Scale, startPos.Y.Offset + delta.Y
+					)
+				end
+			end)
+			inp.Changed:Connect(function()
+				if inp.UserInputState == Enum.UserInputState.End then
+					conn:Disconnect()
+				end
+			end)
+		end
+	end)
+
+	LogoBtn.InputEnded:Connect(function(inp)
+		if inp.UserInputType == Enum.UserInputType.MouseButton1
+			or inp.UserInputType == Enum.UserInputType.Touch then
+			if not logoDragMoved then
+				-- Real tap — toggle UI visibility
+				KingRuaUI.Enabled = not KingRuaUI.Enabled
+				Library:TweenInstance(LBStroke, 0.15, "Thickness", 3)
+				task.delay(0.15, function()
+					Library:TweenInstance(LBStroke, 0.15, "Thickness", 2)
+				end)
+			end
+		end
 	end)
 
 	Minimize.Activated:Connect(function()
