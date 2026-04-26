@@ -1,257 +1,229 @@
 --[[
     SpeedHub X | Blue Library — Full Component Example
-    Shows every available component: Separator, Line, Button,
-    Toggle, Slider, Input, Dropdown (single & multi), Notification
+    Every component is visible and working.
+    Replace the URL below with wherever you host libs_blue.lua
 ]]
 
--- ── Load the library (replace URL with wherever you host libs_blue.lua)
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/libs_blue.lua"))()
+local Library = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/biarzxc1/library/refs/heads/main/libs.lua"
+))()
 
--- ── Create the main window
+-- ══════════════════════════════════════════
+--  WINDOW
+-- ══════════════════════════════════════════
 local Window = Library:CreateWindow({
     ["Title"]       = "Speed Hub X",
-    ["Description"] = "Blue Theme",
+    ["Description"] = "Blue Edition",
     ["Tab Width"]   = 160,
 })
 
--- ════════════════════════════════════════════
---  TAB 1 — Basics  (Button, Toggle, Separator, Line)
--- ════════════════════════════════════════════
-local BasicTab = Window:CreateTab({
-    ["Name"] = "Basics",
+-- ══════════════════════════════════════════
+--  TAB 1 — Main
+-- ══════════════════════════════════════════
+local MainTab = Window:CreateTab({
+    ["Name"] = "Main",
     ["Icon"] = "rbxassetid://10723407389",
 })
 
-local BasicSection = BasicTab:AddSection("Basic Components", true)
+local MainSection = MainTab:AddSection("Main Controls", true)
 
--- Separator (styled header row)
-BasicSection:AddSeperator({
-    ["Title"] = "— Buttons & Toggles —"
+-- Paragraph
+MainSection:AddParagraph({
+    ["Title"]   = "Welcome",
+    ["Content"] = "This is a paragraph component. Use it to show info to the user.",
 })
 
--- Line (thin divider)
-BasicSection:AddLine()
-
--- Button
-local MyButton = BasicSection:AddButton({
-    ["Title"]    = "Click Me",
-    ["Content"]  = "Fires a callback when pressed",
-    ["Icon"]     = "rbxassetid://7734010488",
-    ["Callback"] = function()
-        Library:SetNotification({
-            "Button Pressed",       -- Title
-            "Blue",                 -- Description / accent label
-            "The button was clicked successfully!", -- Content
-            nil,                    -- unused slot
-            0.4,                    -- slide-in time
-            3,                      -- auto-dismiss delay (seconds)
-        })
-    end,
+-- Separator
+MainSection:AddSeperator({
+    ["Title"] = "Movement",
 })
 
--- Toggle (default OFF)
-local SpeedToggle = BasicSection:AddToggle({
+-- Toggle
+local SpeedToggle = MainSection:AddToggle({
     ["Title"]    = "Speed Boost",
-    ["Content"]  = "Enables walk-speed override",
+    ["Content"]  = "Enables fast walk speed",
     ["Default"]  = false,
     ["Callback"] = function(value)
-        -- value is true/false
-        local speed = value and 50 or 16
-        if game.Players.LocalPlayer.Character then
-            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = speed
+        local char = game.Players.LocalPlayer.Character
+        if char then
+            char.Humanoid.WalkSpeed = value and 80 or 16
         end
     end,
 })
 
--- Toggle (default ON)
-local AntiBanToggle = BasicSection:AddToggle({
-    ["Title"]    = "Anti-AFK",
-    ["Content"]  = "Keeps your session alive automatically",
-    ["Default"]  = true,
-    ["Callback"] = function(value)
-        -- handle anti-afk logic here
-    end,
-})
-
--- ════════════════════════════════════════════
---  TAB 2 — Controls  (Slider, Input)
--- ════════════════════════════════════════════
-local ControlTab = Window:CreateTab({
-    ["Name"] = "Controls",
-    ["Icon"] = "rbxassetid://10723407389",
-})
-
-local ControlSection = ControlTab:AddSection("Sliders & Inputs", true)
-
-BasicSection:AddSeperator({ ["Title"] = "— Value Controls —" })
-
 -- Slider
-local SpeedSlider = ControlSection:AddSlider({
+local SpeedSlider = MainSection:AddSlider({
     ["Title"]     = "Walk Speed",
-    ["Content"]   = "Drag to set walk speed",
+    ["Content"]   = "Drag or type a value",
     ["Increment"] = 1,
     ["Min"]       = 16,
     ["Max"]       = 250,
     ["Default"]   = 50,
     ["Callback"]  = function(value)
         local char = game.Players.LocalPlayer.Character
-        if char then char.Humanoid.WalkSpeed = value end
+        if char then
+            char.Humanoid.WalkSpeed = value
+        end
     end,
 })
 
--- Another slider
-local JumpSlider = ControlSection:AddSlider({
+-- Line divider
+MainSection:AddLine()
+
+-- Slider
+local JumpSlider = MainSection:AddSlider({
     ["Title"]     = "Jump Power",
-    ["Content"]   = "Adjusts how high the player jumps",
+    ["Content"]   = "How high you jump",
     ["Increment"] = 5,
     ["Min"]       = 50,
     ["Max"]       = 500,
     ["Default"]   = 50,
     ["Callback"]  = function(value)
         local char = game.Players.LocalPlayer.Character
-        if char then char.Humanoid.JumpPower = value end
-    end,
-})
-
-ControlSection:AddLine()
-
--- Text Input
-local NameInput = ControlSection:AddInput({
-    ["Title"]    = "Custom Chat Tag",
-    ["Content"]  = "Text shown before your name in chat",
-    ["Default"]  = "Speed Hub",
-    ["Callback"] = function(value)
-        -- use value here
-    end,
-})
-
--- Numeric Input
-local TeleportInput = ControlSection:AddInput({
-    ["Title"]    = "Teleport Position",
-    ["Content"]  = "Format: X,Y,Z  e.g. 100,50,200",
-    ["Default"]  = "0,0,0",
-    ["Callback"] = function(value)
-        local parts = string.split(value, ",")
-        if #parts == 3 then
-            local x, y, z = tonumber(parts[1]), tonumber(parts[2]), tonumber(parts[3])
-            if x and y and z then
-                local char = game.Players.LocalPlayer.Character
-                if char then
-                    char.HumanoidRootPart.CFrame = CFrame.new(x, y, z)
-                end
-            end
+        if char then
+            char.Humanoid.JumpPower = value
         end
     end,
 })
 
--- ════════════════════════════════════════════
---  TAB 3 — Dropdowns
--- ════════════════════════════════════════════
-local DropTab = Window:CreateTab({
-    ["Name"] = "Dropdowns",
+-- Button
+MainSection:AddButton({
+    ["Title"]    = "Reset Character",
+    ["Content"]  = "Respawns your character",
+    ["Icon"]     = "rbxassetid://7734010488",
+    ["Callback"] = function()
+        game.Players.LocalPlayer:LoadCharacter()
+    end,
+})
+
+-- ══════════════════════════════════════════
+--  TAB 2 — Settings
+-- ══════════════════════════════════════════
+local SettingsTab = Window:CreateTab({
+    ["Name"] = "Settings",
     ["Icon"] = "rbxassetid://10723407389",
 })
 
-local DropSection = DropTab:AddSection("Dropdown Examples", true)
+local SettingsSection = SettingsTab:AddSection("Player Settings", true)
 
--- Single-select dropdown
-local GamemodeDropdown = DropSection:AddDropdown({
+-- Input
+local NameInput = SettingsSection:AddInput({
+    ["Title"]    = "Display Name",
+    ["Content"]  = "Shown above your head",
+    ["Default"]  = "Player",
+    ["Callback"] = function(value)
+        -- apply name logic here
+    end,
+})
+
+-- Separator
+SettingsSection:AddSeperator({
+    ["Title"] = "Toggles",
+})
+
+-- Toggle (default ON)
+local AntiAFKToggle = SettingsSection:AddToggle({
+    ["Title"]    = "Anti-AFK",
+    ["Content"]  = "Prevents being kicked for idling",
+    ["Default"]  = true,
+    ["Callback"] = function(value)
+        -- handle anti-afk logic here
+    end,
+})
+
+-- Toggle
+local NoclipToggle = SettingsSection:AddToggle({
+    ["Title"]    = "No Clip",
+    ["Content"]  = "Walk through walls",
+    ["Default"]  = false,
+    ["Callback"] = function(value)
+        -- noclip logic here
+    end,
+})
+
+-- Line
+SettingsSection:AddLine()
+
+-- Dropdown — single select
+local GamemodeDropdown = SettingsSection:AddDropdown({
     ["Title"]    = "Game Mode",
-    ["Content"]  = "Choose one mode to activate",
+    ["Content"]  = "Select one mode",
     ["Multi"]    = false,
-    ["Options"]  = { "Normal", "Creative", "Spectator", "God Mode" },
+    ["Options"]  = { "Normal", "Spectator", "God Mode", "Creative" },
     ["Default"]  = { "Normal" },
     ["Callback"] = function(selected)
-        -- selected is a table, e.g. {"Normal"}
         local mode = selected[1]
         -- apply mode logic here
     end,
 })
 
-DropSection:AddLine()
-
--- Multi-select dropdown
-local FeatureDropdown = DropSection:AddDropdown({
-    ["Title"]    = "Active Cheats",
-    ["Content"]  = "Pick multiple features to enable at once",
+-- Dropdown — multi select
+local FeatureDropdown = SettingsSection:AddDropdown({
+    ["Title"]    = "Active Features",
+    ["Content"]  = "Pick multiple to enable",
     ["Multi"]    = true,
-    ["Options"]  = { "No Clip", "Infinite Jump", "Speed Hack", "Auto Farm", "ESP" },
+    ["Options"]  = { "ESP", "Auto Farm", "Aimbot", "Fly", "Inf Jump" },
     ["Default"]  = {},
     ["Callback"] = function(selected)
-        -- selected is a table of all chosen options
         for _, feature in ipairs(selected) do
-            -- enable feature
+            -- enable each feature
         end
     end,
 })
 
--- Programmatic refresh example
-task.delay(5, function()
-    FeatureDropdown:Refresh(
-        { "No Clip", "Infinite Jump", "Speed Hack", "Auto Farm", "ESP", "Fly" }, -- new list
-        { "Speed Hack" } -- pre-select
-    )
-end)
-
--- ════════════════════════════════════════════
---  TAB 4 — Misc & Notifications
--- ════════════════════════════════════════════
-local MiscTab = Window:CreateTab({
-    ["Name"] = "Misc",
+-- ══════════════════════════════════════════
+--  TAB 3 — Utilities
+-- ══════════════════════════════════════════
+local UtilTab = Window:CreateTab({
+    ["Name"] = "Utilities",
     ["Icon"] = "rbxassetid://10723407389",
 })
 
-local MiscSection = MiscTab:AddSection("Notifications & Utilities", true)
+local UtilSection = UtilTab:AddSection("Utility Tools", true)
 
-MiscSection:AddSeperator({ ["Title"] = "— Notification Tests —" })
+-- Notification demo
+UtilSection:AddSeperator({ ["Title"] = "Notifications" })
 
-MiscSection:AddButton({
-    ["Title"]    = "Info Notify",
-    ["Content"]  = "Shows a short info notification",
+UtilSection:AddButton({
+    ["Title"]    = "Show Notification",
+    ["Content"]  = "Fires a test notification",
+    ["Icon"]     = "rbxassetid://7734010488",
     ["Callback"] = function()
         Library:SetNotification({
-            "Information",
-            "Blue",
-            "This is a regular notification. It will auto-dismiss in 4 seconds.",
-            nil, 0.4, 4,
+            [1] = "Speed Hub X",
+            [2] = "Blue",
+            [3] = "Notification is working correctly!",
+            [5] = 0.4,
+            [6] = 4,
         })
     end,
 })
 
-MiscSection:AddButton({
-    ["Title"]    = "Warning Notify",
-    ["Content"]  = "Shows a warning-style notification",
+UtilSection:AddLine()
+
+-- Reset all values using :Set()
+UtilSection:AddSeperator({ ["Title"] = "Reset" })
+
+UtilSection:AddButton({
+    ["Title"]    = "Reset All Defaults",
+    ["Content"]  = "Resets every component to its default value",
+    ["Icon"]     = "rbxassetid://7734010488",
     ["Callback"] = function()
-        Library:SetNotification({
-            "Warning",
-            "Blue",
-            "Something needs your attention! Check your settings before proceeding.",
-            nil, 0.4, 6,
-        })
-    end,
-})
-
-MiscSection:AddLine()
-
-MiscSection:AddSeperator({ ["Title"] = "— Programmatic API —" })
-
--- Demonstrating :Set() on existing components
-MiscSection:AddButton({
-    ["Title"]    = "Reset All Values",
-    ["Content"]  = "Resets speed, jump and input to defaults",
-    ["Callback"] = function()
+        SpeedToggle:Set(false)
         SpeedSlider:Set(50)
         JumpSlider:Set(50)
-        SpeedToggle:Set(false)
-        NameInput:Set("Speed Hub")
+        AntiAFKToggle:Set(true)
+        NoclipToggle:Set(false)
+        NameInput:Set("Player")
         GamemodeDropdown:Set({ "Normal" })
         FeatureDropdown:Set({})
 
         Library:SetNotification({
-            "Reset Complete",
-            "Blue",
-            "All components have been set back to their default values.",
-            nil, 0.4, 3,
+            [1] = "Reset",
+            [2] = "Blue",
+            [3] = "All values have been reset to defaults.",
+            [5] = 0.4,
+            [6] = 3,
         })
     end,
 })
